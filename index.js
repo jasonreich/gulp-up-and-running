@@ -20,8 +20,11 @@ function upAndRunning(options) {
           gutil.log(gutil.colors.green(options.name, 'is up and running!'));
           deferred.resolve();
         } else {
-          // no retry here it makes no sense
-          deferred.reject(new Error('Unexpected status code: ' + response.statusCode));
+          // I prefer to have this
+          if (!operation.retry(e)) {
+            process.stdout.write('\n');
+            deferred.reject(new Error('Unexpected status code: ' + response.statusCode));
+          }
         }
       }).on('error', function (e) {
         if (!operation.retry(e)) {
