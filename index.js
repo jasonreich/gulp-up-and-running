@@ -21,9 +21,10 @@ function upAndRunning(options) {
           deferred.resolve();
         } else {
           // I prefer to have this
+          var e = new Error('Unexpected status code: ' + response.statusCode);
           if (!operation.retry(e)) {
             process.stdout.write('\n');
-            deferred.reject(new Error('Unexpected status code: ' + response.statusCode));
+            deferred.reject(operation.mainError());
           }
         }
       }).on('error', function (e) {
